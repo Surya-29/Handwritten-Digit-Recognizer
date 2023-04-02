@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" /
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Handwritten Digits Recognizer</title>
+    <link rel="stylesheet" href="static/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Libre+Barcode+39&family=Nabla&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="homePage">
+      <h1 style="font-family: 'Bungee Shade', cursive;">Handwritten Digit Recognizer</h1>
+      <br /><br /><br />
+
+      {% if signup %}
+      <form class="inputForm" method="post" action="createuser">
+        {% if messages %}
+        <label for="">Password Incorrect</label> <br /><br />
+        {% else %}
+        <label for="">User did not exist! Signup to create an account</label>
+        <br /><br />
+        {% endif %}
+        <label for="uname">Username</label><br /><br />
+        <input
+          type="text"
+          id="uname"
+          name="uname"
+          value="{{request.form['uname']}}"
+        /><br /><br />
+        <label for="pwd">Password</label><br /><br />
+        <input
+          type="text"
+          id="pwd"
+          name="pwd"
+          value="{{request.form['pwd']}}"
+        /><br /><br />
+        <label for="cpwd">Confirm Password</label><br /><br />
+        <input
+          type="text"
+          id="cpwd"
+          name="cpwd"
+          value="{{request.form['cpwd']}}"
+        /><br /><br /><br />
+        <button class="logb" type="submit">Signup</button>
+        <!-- <button class="regb" type="submit">Sign Up</button> -->
+      </form>
+      {% else %}
+      <form class="inputForm" method="post" action="loginuser">
+        <label for="uname">Username</label><br /><br />
+        <input
+          type="text"
+          id="uname"
+          name="uname"
+          value="{{request.form['uname']}}"
+        /><br /><br /><br />
+        <label for="pwd">Password</label><br /><br />
+        <input
+          type="text"
+          id="pwd"
+          name="pwd"
+          value="{{request.form['pwd']}}"
+        /><br /><br /><br /><br /><br />
+        <button class="logb" type="submit">Login</button>
+        <!-- <button class="regb" type="submit">Sign Up</button> -->
+      </form>
+      {% endif %}
+      <br />
+    </div>
+  </body>
+</html>

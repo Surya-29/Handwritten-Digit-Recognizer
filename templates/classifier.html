@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="static/classifierpage.css" />
+    <title>Handwritten Digits Recognizer</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bungee+Shade&family=Libre+Barcode+39&family=Nabla&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <h1>Handwritten Digits Recognizer</h1>
+    <div id="paint" class="drawBox">
+      <canvas id="myCanvas" width="600px" height="600px"></canvas>
+    </div>
+
+    <div id="prediction_layout">
+      <input
+        class="custom-btn btn-3"
+        id="onClick"
+        type="button"
+        value="Classify"
+        onclick="save();"
+      />
+      <input
+        class="custom-btn btn-4"
+        type="button"
+        value="Clear"
+        onclick="redraw();"
+      />
+
+      <ul>
+        <li>Label:<span id="Label"></span></li>
+        <li>Accuracy:<span id="Accuracy"></span>%</li>
+      </ul>
+    </div>
+    <span class="footer">Copyright Surya</span>
+    <script>
+      var canvas = document.getElementById("myCanvas");
+      var ctx = canvas.getContext("2d");
+
+      var painting = document.getElementById("paint");
+      var paint_style = getComputedStyle(painting);
+      // canvas.width = parseInt(paint_style.getPropertyValue("width")) ;
+      // canvas.height = parseInt(paint_style.getPropertyValue("height")) ;
+
+      var mouse = { x: 0, y: 0 };
+
+      canvas.addEventListener(
+        "mousemove",
+        function (e) {
+          mouse.x = e.pageX - this.offsetLeft;
+          mouse.y = e.pageY - this.offsetTop;
+        },
+        false
+      );
+
+      ctx.lineWidth = 20;
+      ctx.lineJoin = "round";
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#ffffff";
+
+      canvas.addEventListener(
+        "mousedown",
+        function (e) {
+          ctx.beginPath();
+          ctx.moveTo(mouse.x, mouse.y);
+          canvas.addEventListener("mousemove", onPaint, false);
+        },
+        false
+      );
+      canvas.addEventListener(
+        "mouseup",
+        function (e) {
+          canvas.removeEventListener("mousemove", onPaint, false);
+        },
+        false
+      );
+
+      var onPaint = function () {
+        ctx.lineTo(mouse.x, mouse.y);
+        ctx.stroke();
+      };
+      function redraw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+
+      function save() {
+        $.ajax({
+          type: "POST",
+          url: "{{url_for('getImage')}}",
+          data: { imagebase64: canvas.toDataURL() },
+        });
+        getPred();
+      }
+      function getPred() {
+        let Label = document.getElementById("Label");
+        let Accuracy = document.getElementById("Accuracy");
+        fetch("/getImage")
+          .then((response) => response.json())
+          .then(function (data) {
+            console.log(data["predictions"][0]);
+            Label.innerText = data["predictions"][0];
+            Accuracy.innerText = data["predictions"][1];
+          });
+      }
+      // function pred() {
+      //       save();
+      //       setInterval(function () {
+      //           save();
+      //       }, 1000);
+      // };
+
+
+    </script>
+  </body>
+</html>
