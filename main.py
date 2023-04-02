@@ -26,7 +26,7 @@ app.config[
 
 
 dataBase = mysql.connector.connect(
-    host="localhost", user="root", passwd="surya123", database="userdata"
+    host="localhost", user="root", passwd="_______", database="userdata"
 )
 cursorObject = dataBase.cursor()
 
